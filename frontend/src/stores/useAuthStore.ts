@@ -9,6 +9,7 @@ export const useAuthStore = create<UseAuthState>((set) => ({
       const res = await axiosInstance.get("/admin/check");
       set({ isAdmin: res.data?.admin || false });
     } catch (error) {
+      set({ isAdmin: false });
       if (checkError(error) != "Unauthorized")
         console.log("Error in useAuthStore checkIsAdmin: " + error);
     }

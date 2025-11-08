@@ -4,10 +4,10 @@ import { Album } from "../models/album_model.js";
 
 export const createSong = async (req, res, next) => {
   try {
-    if (!req.files || !req.files.audioFile || !req.files.imageFile)
+    if (!req.files.audioFile || !req.files.imageFile)
       return res.status(400).json({ error: "Please upload all files." });
     const { title, artist, duration, albumId } = req.body;
-    if (!title || !artist || !duration || !albumId)
+    if (!title || !artist || !duration)
       return res.status(400).json({ error: "Please fill all blocks." });
     const audioFile = req.files.audioFile;
     const imageFile = req.files.imageFile;
@@ -53,7 +53,7 @@ export const deleteSong = async (req, res, next) => {
         $pull: { songs: song._id },
       });
     }
-
+    console.log(song);
     deleteFromCloudinary(song.imageId);
     deleteFromCloudinary(song.audioId);
 

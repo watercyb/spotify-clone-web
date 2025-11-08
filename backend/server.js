@@ -1,6 +1,7 @@
 import expess from "express";
 import dotenv from "dotenv";
 import { clerkMiddleware } from "@clerk/express";
+import path from "path";
 import cors from "cors";
 import fileUpload from "express-fileupload";
 
@@ -12,8 +13,8 @@ import album_route from "./routes/album_route.js";
 import stat_route from "./routes/stat_route.js";
 import { connectDB } from "./lib/db.js";
 import { cloudinaryConfig } from "./lib/cloudinary.js";
-import { deleteAlbum } from "./controller/admin_controller.js";
 
+const __dirname = path.resolve();
 const app = expess();
 
 app.use(
@@ -24,7 +25,16 @@ app.use(
   })
 );
 
-app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: path.join(__dirname, "tmp"),
+    createParentPath: true,
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB  max file size
+    },
+  })
+);
 
 dotenv.config();
 const port = process.env.PORT;
