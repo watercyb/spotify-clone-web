@@ -53,7 +53,6 @@ export const deleteSong = async (req, res, next) => {
         $pull: { songs: song._id },
       });
     }
-    console.log(song);
     deleteFromCloudinary(song.imageId);
     deleteFromCloudinary(song.audioId);
 
@@ -92,7 +91,7 @@ export const createAlbum = async (req, res, next) => {
 export const deleteAlbum = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!id) return res.status(400).json({ error: "Please inout album id." });
+    if (!id) return res.status(400).json({ error: "Please input album id." });
 
     const album = await Album.findById(id);
     if (!album) return res.status(400).json({ error: "Album not found." });
@@ -102,7 +101,7 @@ export const deleteAlbum = async (req, res, next) => {
 
     deleteFromCloudinary(album.imageId);
 
-    res.status(200).json({ message: "Album deleted successfully." });
+    res.status(200).json({ message: "Album deleted successfully.", album });
   } catch (error) {
     next("Error in admin_controller deleteAlbum: " + error);
   }

@@ -1,3 +1,4 @@
+import type { AddAlbumDialogInputs } from "./AddAlbumDialogInputs";
 import type { AddSongDialoginputs } from "./AddSongDialogInputs";
 import type { Album } from "./Album";
 import type { Song } from "./Song";
@@ -20,6 +21,11 @@ export default interface UseAdminStore {
   uploadSong: (
     inputs: AddSongDialoginputs,
     audioFile: File | null,
+    imageFile: File | null
+  ) => Promise<void>;
+  deleteAlbum: (id: string) => Promise<void>;
+  uploadAlbum: (
+    inputs: AddAlbumDialogInputs,
     imageFile: File | null
   ) => Promise<void>;
 }
