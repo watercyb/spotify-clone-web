@@ -128,7 +128,6 @@ export const useAdminStore = create<UseAdminStore>((set, get) => ({
       toast.success("Album deleted successfully");
     } catch (error: unknown) {
       console.log("Error in useAdminStrore deleteAlbum: " + error);
-      console.log(error);
       toast.error("Error deleting album");
     }
   },

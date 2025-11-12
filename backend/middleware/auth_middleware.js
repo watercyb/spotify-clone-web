@@ -6,7 +6,6 @@ export const protectRoute = async (req, res, next) => {
     res.status(401).json({ message: "Unauthorized - you must be logged in." });
   } else {
     const user = await User.findOne({ clerkId: req.auth().userId });
-    //TODO check user?
     req.user = user;
     next();
   }

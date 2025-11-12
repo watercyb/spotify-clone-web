@@ -3,11 +3,13 @@ import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import { useAuthStore } from "../stores/useAuthStore";
+import { useChatStore } from "@/stores/useChatStore";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { getToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const { checkIsAdmin } = useAuthStore();
+  const { connect } = useChatStore();
 
   useEffect(() => {
     let interceptorId: number;
@@ -24,6 +26,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
           );
           checkIsAdmin();
+          connect(token);
         }
       } catch (error) {
         console.log("Error in auth provider", error);
@@ -38,7 +41,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (interceptorId)
         axiosInstance.interceptors.request.eject(interceptorId);
     };
-  }, [getToken, checkIsAdmin]);
+  }, [getToken, checkIsAdmin, connect]);
 
   if (loading)
     return (
