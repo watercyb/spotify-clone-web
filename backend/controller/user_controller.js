@@ -13,19 +13,19 @@ export const getAllUsers = async (req, res, next) => {
   }
 };
 
-export const getMessages=async (req, res, next) => {
+export const getMessages = async (req, res, next) => {
   try {
-    const { user, receiverId } = req;
+    const user = req.user;
+    const { receiverId } = req.params;
     const messages = await Message.find({
-			$or: [
-				{ senderId: user, receiverId: receiverId },
-				{ senderId: receiverId, receiverId: user },
-			],
-		}).sort({ createdAt: 1 });
+      $or: [
+        { senderId: user._id, receiverId: receiverId },
+        { senderId: receiverId, receiverId: user._id },
+      ],
+    }).sort({ createdAt: 1 });
 
     res.status(200).json(messages);
   } catch (error) {
     next("Error in user_controller getMessages: " + error);
   }
 };
-

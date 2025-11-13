@@ -35,11 +35,11 @@ export const initialSocket = (server) => {
   io.on("connection", async (socket) => {
     const userId = socket.user._id;
     console.log("connected:", socket.id + " " + userId);
-    userSocketIds.set(userId, socket.id);
+    userSocketIds.set(userId.toString(), socket.id);
     userActivities.set(userId, "Idle");
 
     io.emit("user_connected", userId);
-    socket.emit("user_id", userId);
+    socket.emit("user", socket.user);
     socket.emit("users_online", Array.from(userSocketIds.keys()));
     socket.emit("activities", Array.from(userActivities.entries()));
 
