@@ -39,6 +39,14 @@ export const usePlayerStore = create<UsePlayerStore>((set, get) => ({
         hasNext: currentSongIdx < playList.length - 1,
       });
     }
+
+    if (get().isPlaying) {
+      useChatStore
+        .getState()
+        .updateActivity(get().playList[get().currentSongIdx]);
+    } else {
+      useChatStore.getState().updateActivity(null);
+    }
   },
 
   play: () => {

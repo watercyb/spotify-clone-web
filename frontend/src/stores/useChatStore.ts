@@ -25,10 +25,10 @@ export const useChatStore = create<UseChatStore>((set, get) => ({
     if (get().socket) return;
 
     const socket = io(
-      import.meta.env.NODE_ENV === "development"
+      import.meta.env.VITE_NODE_ENV === "development"
         ? "http://localhost:5000"
         : "/",
-      { auth: { token }, autoConnect: false }
+      { auth: { token }}
     );
 
     socket.on("connect", () => {

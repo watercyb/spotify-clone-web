@@ -9,7 +9,6 @@ import ChatPage from "./pages/chat/ChatPage";
 import NotFoundPage from "./pages/404/NotFoundPage";
 
 function App() {
-
   return (
     <>
       <Routes>
