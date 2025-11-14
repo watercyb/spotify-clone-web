@@ -10,7 +10,8 @@
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "start": "cross-env NODE_ENV=production node backend/server.js",
     "build_frontend": "npm run build --prefix frontend",
-    "build_all": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build_all": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "seed": "node backend/seeds/albums.js"
   },
   "keywords": [],
   "author": "",
