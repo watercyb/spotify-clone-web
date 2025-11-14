@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 import { axiosInstance } from "@/lib/axios";
 import toast from "react-hot-toast";
 import type { Message } from "@/types/Message";
+import type { Song } from "@/types/Song";
 
 export const useChatStore = create<UseChatStore>((set, get) => ({
   isLoadingUser: false,
@@ -23,7 +24,12 @@ export const useChatStore = create<UseChatStore>((set, get) => ({
   connect: async (token) => {
     if (get().socket) return;
 
-    const socket = io("http://localhost:5000", { auth: { token } });
+    const socket = io(
+      import.meta.env.NODE_ENV === "development"
+        ? "http://localhost:5000"
+        : "/",
+      { auth: { token }, autoConnect: false }
+    );
 
     socket.on("connect", () => {
       console.log("Connected");
@@ -59,12 +65,12 @@ export const useChatStore = create<UseChatStore>((set, get) => ({
     });
 
     socket.on("user_disconnected", (userId: string) => {
-        const onlineUsers = new Set(get().onlineUsers);
-        onlineUsers.delete(userId);
-        set({onlineUsers});
+      const onlineUsers = new Set(get().onlineUsers);
+      onlineUsers.delete(userId);
+      set({ onlineUsers });
     });
 
-    socket.on("activities", (activities: [string, string][]) => {
+    socket.on("activities", (activities: [string, Song | null][]) => {
       set({ userActivities: new Map(activities) });
     });
 
@@ -111,5 +117,10 @@ export const useChatStore = create<UseChatStore>((set, get) => ({
     } finally {
       set({ isLoadingMessage: false });
     }
+  },
+
+  updateActivity: (song) => {
+    const socket = get().socket;
+    socket?.emit("update_activity", song);
   },
 }));

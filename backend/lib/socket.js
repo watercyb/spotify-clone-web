@@ -36,7 +36,7 @@ export const initialSocket = (server) => {
     const userId = socket.user._id;
     console.log("connected:", socket.id + " " + userId);
     userSocketIds.set(userId.toString(), socket.id);
-    userActivities.set(userId, "Idle");
+    userActivities.set(userId, null);
 
     io.emit("user_connected", userId);
     socket.emit("user", socket.user);

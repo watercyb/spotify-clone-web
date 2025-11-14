@@ -6,10 +6,8 @@ import { HeadphonesIcon, Music, Users } from "lucide-react";
 import { useEffect } from "react";
 
 const FriendsActivity = () => {
-  const { users, getUsers } = useChatStore();
+  const { users, onlineUsers, userActivities, getUsers } = useChatStore();
   const { isLoaded, user } = useUser();
-
-  const isOnline = true;
 
   useEffect(() => {
     if (isLoaded && user) {
@@ -31,9 +29,8 @@ const FriendsActivity = () => {
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-4">
           {users.map((user) => {
-            const activity = "activity";
-            const isPlaying = activity;
-
+            const activity = userActivities.get(user._id);
+            console.log(activity);
             return (
               <div
                 key={user._id}
@@ -47,7 +44,7 @@ const FriendsActivity = () => {
                     </Avatar>
                     <div
                       className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-zinc-900 
-												${isOnline ? "bg-green-500" : "bg-zinc-500"}
+												${onlineUsers.has(user._id) ? "bg-green-500" : "bg-zinc-500"}
 												`}
                       aria-hidden="true"
                     />
@@ -58,18 +55,18 @@ const FriendsActivity = () => {
                       <span className="font-medium text-sm text-white">
                         {user.fullName}
                       </span>
-                      {isPlaying && (
+                      {activity && (
                         <Music className="size-3.5 text-emerald-400 shrink-0" />
                       )}
                     </div>
 
-                    {isPlaying ? (
+                    {activity ? (
                       <div className="mt-1">
                         <div className="mt-1 text-sm text-white font-medium truncate">
-                          {activity.replace("Playing ", "").split(" by ")[0]}
+                          {activity.title}
                         </div>
                         <div className="text-xs text-zinc-400 truncate">
-                          {activity.split(" by ")[1]}
+                          {activity.artist}
                         </div>
                       </div>
                     ) : (

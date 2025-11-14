@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { UsePlayerStore } from "@/types/UsePlayerStore";
 import type { Song } from "@/types/Song";
+import { useChatStore } from "./useChatStore";
 
 export const usePlayerStore = create<UsePlayerStore>((set, get) => ({
   playList: [],
@@ -42,10 +43,14 @@ export const usePlayerStore = create<UsePlayerStore>((set, get) => ({
 
   play: () => {
     set({ isPlaying: true });
+    useChatStore
+      .getState()
+      .updateActivity(get().playList[get().currentSongIdx]);
   },
 
   pause: () => {
     set({ isPlaying: false });
+    useChatStore.getState().updateActivity(null);
   },
 
   playNext: () => {
@@ -61,6 +66,14 @@ export const usePlayerStore = create<UsePlayerStore>((set, get) => ({
         hasPrev: currentSongIdx > 0,
         hasNext: currentSongIdx < playList.length - 1,
       });
+    }
+
+    if (get().isPlaying) {
+      useChatStore
+        .getState()
+        .updateActivity(get().playList[get().currentSongIdx]);
+    } else {
+      useChatStore.getState().updateActivity(null);
     }
   },
 
@@ -78,10 +91,25 @@ export const usePlayerStore = create<UsePlayerStore>((set, get) => ({
         hasNext: currentSongIdx < playList.length - 1,
       });
     }
+
+    if (get().isPlaying) {
+      useChatStore
+        .getState()
+        .updateActivity(get().playList[get().currentSongIdx]);
+    } else {
+      useChatStore.getState().updateActivity(null);
+    }
   },
 
   togglePlay: () => {
     const isPlaying = !get().isPlaying;
+    if (isPlaying) {
+      useChatStore
+        .getState()
+        .updateActivity(get().playList[get().currentSongIdx]);
+    } else {
+      useChatStore.getState().updateActivity(null);
+    }
     set({ isPlaying });
   },
 }));

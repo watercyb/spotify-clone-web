@@ -55,6 +55,13 @@ app.use("/api/songs", song_route);
 app.use("/api/albums", album_route);
 app.use("/api/stats", stat_route);
 
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "./frontend/dist")));
+	app.get(new RegExp(".*"), (req, res) => {
+		res.sendFile(path.resolve(__dirname, "./frontend", "dist", "index.html"));
+	});
+}
+
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(500).json({ message: "Internal server error." });
