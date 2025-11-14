@@ -6,6 +6,7 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 import http from "http";
 import cron from "node-cron";
+import fs from "fs";
 
 import user_route from "./routes/user_route.js";
 import auth_route from "./routes/auth_route.js";
@@ -20,6 +21,9 @@ import { initialSocket } from "./lib/socket.js";
 const __dirname = path.resolve();
 const app = express();
 const server = http.createServer(app);
+const port = process.env.PORT;
+
+dotenv.config();
 
 initialSocket(server);
 
@@ -56,9 +60,6 @@ cron.schedule("0 * * * *", () => {
     });
   }
 });
-
-dotenv.config();
-const port = process.env.PORT;
 
 app.use(clerkMiddleware());
 
