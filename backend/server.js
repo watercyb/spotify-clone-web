@@ -5,6 +5,7 @@ import path from "path";
 import cors from "cors";
 import fileUpload from "express-fileupload";
 import http from "http";
+import cron from "node-cron";
 
 import user_route from "./routes/user_route.js";
 import auth_route from "./routes/auth_route.js";
@@ -41,6 +42,21 @@ app.use(
   })
 );
 
+const tempDir = path.join(process.cwd(), "tmp");
+cron.schedule("0 * * * *", () => {
+  if (fs.existsSync(tempDir)) {
+    fs.readdir(tempDir, (err, files) => {
+      if (err) {
+        console.log("error", err);
+        return;
+      }
+      for (const file of files) {
+        fs.unlink(path.join(tempDir, file), (err) => {});
+      }
+    });
+  }
+});
+
 dotenv.config();
 const port = process.env.PORT;
 
@@ -56,10 +72,10 @@ app.use("/api/albums", album_route);
 app.use("/api/stats", stat_route);
 
 if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "./frontend/dist")));
-	app.get(new RegExp(".*"), (req, res) => {
-		res.sendFile(path.resolve(__dirname, "./frontend", "dist", "index.html"));
-	});
+  app.use(express.static(path.join(__dirname, "./frontend/dist")));
+  app.get(new RegExp(".*"), (req, res) => {
+    res.sendFile(path.resolve(__dirname, "./frontend", "dist", "index.html"));
+  });
 }
 
 app.use((err, req, res, next) => {
